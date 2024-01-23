@@ -1,8 +1,9 @@
 ### THRUK
 
 SED=sed
-DAILYVERSION=$(shell ./get_version)
-DAILYVERSIONFILES=$(shell ./get_version | tr -d '-' | tr ' ' '-')
+DAILYVERSION != ./get_version
+DAILYVERSIONFILES != ./get_version | tr -d '-' | tr ' ' '-'
+WRKDIR != pwd
 
 .PHONY: themes
 
@@ -166,7 +167,7 @@ local_install: local_patches
 	mkdir -p ${DESTDIR}${LOGDIR}
 	############################################################################
 	# logrotation
-	[ -z "${LOGROTATEDIR}" ] || { mkdir -p ${DESTDIR}${LOGROTATEDIR} && cp -p support/thruk.logrotate ${DESTDIR}${LOGROTATEDIR}/thruk-base && cd ${DESTDIR}${LOGROTATEDIR} && patch -p1 < $(shell pwd)/blib/replace/0005-logrotate.patch; }
+	[ -z "${LOGROTATEDIR}" ] || { mkdir -p ${DESTDIR}${LOGROTATEDIR} && cp -p support/thruk.logrotate ${DESTDIR}${LOGROTATEDIR}/thruk-base && cd ${DESTDIR}${LOGROTATEDIR} && patch -p1 < ${WRKDIR}/blib/replace/0005-logrotate.patch; }
 	############################################################################
 	# bash completion
 	[ -z "${BASHCOMPLDIR}" ] || { mkdir -p ${DESTDIR}${BASHCOMPLDIR} && cp -p support/thruk_bash_completion ${DESTDIR}${BASHCOMPLDIR}/thruk-base; }
@@ -181,10 +182,10 @@ local_install: local_patches
 	cp -p blib/replace/thruk_cookie_auth.include ${DESTDIR}${DATADIR}/
 	############################################################################
 	# some patches
-	cd ${DESTDIR}${SYSCONFDIR}/ && patch -p1 < $(shell pwd)/blib/replace/0001-thruk.conf.patch
-	cd ${DESTDIR}${SYSCONFDIR}/ && patch -p1 < $(shell pwd)/blib/replace/0002-log4perl.conf.patch
-	cd ${DESTDIR}${DATADIR}/    && patch -p1 < $(shell pwd)/blib/replace/0003-thruk_data_scripts.patch
-	cd ${DESTDIR}${DATADIR}/    && patch -p1 < $(shell pwd)/blib/replace/0004-fcgish.patch
+	cd ${DESTDIR}${SYSCONFDIR}/ && patch -p1 < ${WRKDIR}/blib/replace/0001-thruk.conf.patch
+	cd ${DESTDIR}${SYSCONFDIR}/ && patch -p1 < ${WRKDIR}/blib/replace/0002-log4perl.conf.patch
+	cd ${DESTDIR}${DATADIR}/    && patch -p1 < ${WRKDIR}/blib/replace/0003-thruk_data_scripts.patch
+	cd ${DESTDIR}${DATADIR}/    && patch -p1 < ${WRKDIR}/blib/replace/0004-fcgish.patch
 	find ${DESTDIR}${BINDIR}/ -name \*.orig -delete
 	find ${DESTDIR}${DATADIR}/ -name \*.orig -delete
 	find ${DESTDIR}${SYSCONFDIR}/ -name \*.orig -delete

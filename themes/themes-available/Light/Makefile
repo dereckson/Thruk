@@ -1,6 +1,7 @@
 SHELL=/bin/bash
 NAME=$(notdir $(abspath .))
-N_PREFIX=$(shell pwd)/node
+WRKDIR != pwd
+N_PREFIX=${WRKDIR}/node
 NODEVERSION=16
 
 build: stylesheets/$(NAME).css
@@ -30,13 +31,13 @@ watch: node_modules
 node: node_modules/.bin/n
 
 node_modules/.bin/n:
-	npm install n --no-audit --no-fund --prefix=$(shell pwd)/.
+	npm install n --no-audit --no-fund --prefix=${WRKDIR}/.
 	N_PREFIX=$(N_PREFIX) \
 		./node_modules/.bin/n $(NODEVERSION)
 
 node_modules: node
 	N_PREFIX=$(N_PREFIX) \
-		./node_modules/.bin/n exec $(NODEVERSION) npm i -D --no-audit --no-fund --prefix=$(shell pwd)/. \
+		./node_modules/.bin/n exec $(NODEVERSION) npm i -D --no-audit --no-fund --prefix=${WRKDIR}/. \
 			tailwindcss@latest \
 			postcss@latest \
 			autoprefixer@latest \
